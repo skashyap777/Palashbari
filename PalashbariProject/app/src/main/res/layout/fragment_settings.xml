@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@color/white"
+    tools:context=".SettingsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/linearLayout15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="0dp">
+
+            <include layout="@layout/toolbar" />
+
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:id="@+id/lin"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout15"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:padding="15sp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                 <androidx.cardview.widget.CardView
+                     android:layout_marginTop="20sp"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     app:cardCornerRadius="25sp">
+
+                    <LinearLayout
+                        android:background="@color/grey6"
+                        android:padding="20sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="50sp"
+                            android:layout_height="50sp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center"
+                            android:background="#00FFFFFF"
+                            app:cardCornerRadius="100dp">
+
+
+                            <ImageView
+                                android:id="@+id/imageView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/frame_161" />
+
+                        </androidx.cardview.widget.CardView>
+
+                        <LinearLayout
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:fontFamily="@font/readex_pro"
+                                android:textSize="18sp"
+                                android:textColor="@color/black1"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/nameTextView"/>
+
+                            <TextView
+                                android:id="@+id/emailTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/readex_pro_light"
+                                android:textColor="@color/grey7"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                     
+                 </androidx.cardview.widget.CardView>
+
+                 <TextView
+                     android:layout_marginTop="50dp"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:fontFamily="@font/inter_medium"
+                     android:textSize="12sp"
+                     android:textColor="@color/grey1"
+                     android:text="General"/>
+
+
+                    <LinearLayout
+                        android:layout_marginTop="10sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:id="@+id/editProfileLayout"
+                            android:padding="15sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/user_svgrepo_com"/>
+
+                            <TextView
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter"
+                                android:textSize="12sp"
+                                android:textColor="@color/black1"
+                                android:text="Edit Profile"/>
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/vector11"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/changePasswordLayout"
+                            android:padding="15sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/password_minimalistic_input_svgrepo_com"/>
+
+                            <TextView
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter"
+                                android:textSize="12sp"
+                                android:textColor="@color/black1"
+                                android:text="Change Password"/>
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/vector11"/>
+
+                        </LinearLayout>
+
+<!--                        <LinearLayout-->
+<!--                            -->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:orientation="horizontal">-->
+
+<!--                            <ImageView-->
+<!--                                android:layout_width="15sp"-->
+<!--                                android:layout_marginLeft="15sp"-->
+<!--                                android:layout_height="15sp"-->
+<!--                                android:layout_gravity="center"-->
+<!--                                android:src="@drawable/bell__1"/>-->
+
+<!--                            <TextView-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:layout_gravity="center"-->
+<!--                                android:layout_marginLeft="10sp"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:fontFamily="@font/inter"-->
+<!--                                android:textSize="12sp"-->
+<!--                                android:textColor="@color/black1"-->
+<!--                                android:text="Notifications"/>-->
+
+<!--                            <com.google.android.material.switchmaterial.SwitchMaterial-->
+<!--                                android:id="@+id/material_switch"-->
+<!--                                android:layout_marginRight="15sp"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                app:thumbTint="@drawable/thumb_selector"-->
+<!--                                app:trackTint="@drawable/track_selector"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                />-->
+
+<!--                        </LinearLayout>-->
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_marginTop="30dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/grey1"
+                        android:text="Information"/>
+
+                    <LinearLayout
+                        android:layout_marginTop="10sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:id="@+id/aboutAppLayout"
+                            android:padding="15sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/info_1"/>
+
+                            <TextView
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter"
+                                android:textSize="12sp"
+                                android:textColor="@color/black1"
+                                android:text="About the app"/>
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/vector11"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:padding="15sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/vector__4_"/>
+
+                            <TextView
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter"
+                                android:textSize="12sp"
+                                android:textColor="@color/black1"
+                                android:text="Privacy Policy"/>
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/vector11"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:padding="15sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/headset_solid"/>
+
+                            <TextView
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="10sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter"
+                                android:textSize="12sp"
+                                android:textColor="@color/black1"
+                                android:text="Help &amp; Support"/>
+
+                            <ImageView
+                                android:layout_width="15sp"
+                                android:layout_height="15sp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/vector11"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/logOutLayout"
+                        android:layout_marginTop="50sp"
+                        android:layout_marginBottom="50sp"
+                        android:padding="15sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15sp"
+                            android:layout_height="15sp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/logout"/>
+
+                        <TextView
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/red"
+                            android:text="Logout"/>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </ScrollView>
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

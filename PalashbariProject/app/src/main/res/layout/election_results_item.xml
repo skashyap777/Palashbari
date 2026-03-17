@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/grey3"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/mainCardLayout"
+        android:background="@color/grey3"
+        android:padding="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/yearTextview"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:textSize="16sp"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_marginLeft="10sp"
+            android:layout_gravity="center"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:src="@drawable/vector11"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:background="@color/grey4"
+        android:layout_width="match_parent"
+        android:layout_height="1sp"/>
+
+</LinearLayout>

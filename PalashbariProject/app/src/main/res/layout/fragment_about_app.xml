@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@color/white"
+    tools:context=".AboutAppFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/linearLayout15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
+
+    <include layout="@layout/toolbar" />
+
+
+    </androidx.cardview.widget.CardView>
+
+
+        <LinearLayout
+            android:id="@+id/lin"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout15"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="15sp">
+
+                    <TextView
+                        android:layout_marginTop="10sp"
+                        android:lineSpacingExtra="8dp"
+                        android:layout_width="match_parent"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="@color/grey7"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome to the Palashbari app, your comprehensive guide to the vibrant district of Palashbari. Whether you are a resident or a visitor, our app is designed to provide you with all the information you need about local committees, government schemes, educational institutions, religious places, community clubs, and more."/>
+
+                    <TextView
+                        android:layout_marginTop="40sp"
+                        android:lineSpacingExtra="8dp"
+                        android:layout_width="match_parent"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/grey7"
+                        android:layout_height="wrap_content"
+                        android:text="Key Features:"/>
+
+                    <TextView
+                        android:layout_marginTop="10sp"
+                        android:lineSpacingExtra="8dp"
+                        android:layout_width="match_parent"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="@color/grey7"
+                        android:layout_height="wrap_content"
+                        android:text="● Detailed information on district committees and their initiatives\n● Updates on various government schemes and their beneficiaries\n● Comprehensive guides to religious places like mandirs and namghars\n● Information on local schools, colleges, and educational facilities\n● Insights into local clubs, recreational activities, and community centers\n● Detailed profiles of villages and their unique characteristics"/>
+
+                    <TextView
+                        android:layout_marginTop="20sp"
+                        android:lineSpacingExtra="8dp"
+                        android:layout_width="match_parent"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/roboto"
+                        android:textColor="@color/grey7"
+                        android:layout_height="wrap_content"
+                        android:text="Our mission is to keep you informed and connected with everything happening in Palashbari, making it easier for you to engage with and contribute to our community."/>
+
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

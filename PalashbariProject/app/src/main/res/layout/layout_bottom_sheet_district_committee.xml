@@ -1,0 +1,231 @@
+<!-- res/layout/layout_bottom_sheet.xml -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/bottomSheetLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/curved_top_background"
+        >
+
+    <View
+        android:id="@+id/dismiss"
+        android:layout_marginTop="26dp"
+        android:layout_width="64dp"
+        android:layout_height="3dp"
+        android:layout_gravity="center"
+        android:background="@color/grey"/>
+
+
+        <TextView
+            android:layout_marginLeft="16sp"
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filters"
+            android:fontFamily="@font/roboto_medium"
+            android:textSize="22sp"
+            android:textColor="@color/black1"/>
+
+        <View
+            android:layout_marginTop="20sp"
+            android:layout_width="match_parent"
+            android:background="@color/grey"
+            android:layout_height="1sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:background="@color/grey5"
+            android:layout_width="0sp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/designationLayout"
+                android:padding="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/designationText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Designation"
+                    android:textSize="12sp"
+                    android:textColor="@color/grey2"
+                    android:fontFamily="@font/roboto"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="16sp"
+            android:layout_width="0sp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:visibility="gone"
+                android:id="@+id/searchDesignation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="25sp"
+                app:cardUseCompatPadding="true"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background_white"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/searchEditTextDesignation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10sp"
+                        android:layout_marginRight="10sp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/roboto"
+                        android:hint="Search..."
+                        android:inputType="text"
+                        android:maxLength="10"
+                        android:padding="8sp"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/itemContainerDesignation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                app:flexWrap="wrap"
+                app:justifyContent="flex_start"
+                app:alignItems="flex_start" />
+
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/noRecDesignation"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Records found."
+                android:fontFamily="@font/roboto_bold"
+                android:textSize="14sp"
+                android:textColor="@color/black"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/grey"
+            android:layout_height="1sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/clear"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="25sp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/grey"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="10sp"
+                    android:paddingBottom="10sp"
+                    android:paddingRight="25sp"
+                    android:paddingLeft="25sp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/readex_pro_medium"
+                        android:text="Clear"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey2"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/showResult"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="25sp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/green"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="10sp"
+                    android:paddingBottom="10sp"
+                    android:paddingRight="25sp"
+                    android:paddingLeft="25sp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/readex_pro_medium"
+                        android:text="Show Results"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+</LinearLayout>
+</ScrollView>
