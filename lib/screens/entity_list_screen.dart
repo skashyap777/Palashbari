@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/entity.dart';
+import '../widgets/user_avatar.dart';
 import '../models/paginated_response.dart';
 import '../services/api_service.dart';
 import '../config/dashboard_config.dart';
@@ -38,6 +40,9 @@ class _EntityListScreenState extends State<EntityListScreen> {
   
   final Map<String, List<String>> _selectedIds = {};
   final Map<String, List<FilterItem>> _selectedFilters = {}; // For display chips
+
+  // Special for Namghar & Mandirs
+  String _selectedType = 'namghar';
 
   @override
   void initState() {
@@ -80,6 +85,10 @@ class _EntityListScreenState extends State<EntityListScreen> {
       // Ensure all expected filter keys are present (even if empty) as some API endpoints require them
       for (var category in widget.dashboardIcon.filterCategories ?? []) {
         params[_getApiKey(category)] = '';
+      }
+
+      if (widget.dashboardIcon.title == 'Namghar \u0026 Mandirs') {
+        params['type'] = _selectedType;
       }
 
       _selectedFilters.forEach((key, value) {
@@ -135,6 +144,10 @@ class _EntityListScreenState extends State<EntityListScreen> {
       // Ensure all expected filter keys are present (even if empty) as some API endpoints require them
       for (var category in widget.dashboardIcon.filterCategories ?? []) {
         params[_getApiKey(category)] = '';
+      }
+
+      if (widget.dashboardIcon.title == 'Namghar \u0026 Mandirs') {
+        params['type'] = _selectedType;
       }
 
       _selectedFilters.forEach((key, value) {
@@ -207,81 +220,181 @@ class _EntityListScreenState extends State<EntityListScreen> {
     const primaryColor = Color(0xFF00BBA7);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: primaryColor, size: 28),
+          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1D1D1F), size: 18),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.customTitle ?? widget.dashboardIcon.title,
           style: const TextStyle(
-            color: Colors.black87,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            color: Color(0xFF1D1D1F),
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.5,
           ),
         ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16.0),
+            child: UserAvatar(radius: 18),
+          ),
+        ],
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: _onSearch,
-                    decoration: InputDecoration(
-                      hintText: 'Search ${widget.dashboardIcon.title}...',
-                      prefixIcon: const Icon(Icons.search, color: primaryColor),
-                      filled: true,
-                      fillColor: Colors.grey.shade100,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide.none,
+                  child: Container(
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF2F2F7),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: _onSearch,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
+                        prefixIcon: Icon(Icons.search, color: Colors.grey.shade500, size: 20),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
-                InkWell(
-                  onTap: _showFilterBottomSheet,
-                  child: const Icon(
-                    Icons.filter_alt_outlined,
-                    color: primaryColor,
-                    size: 32,
+                if (widget.dashboardIcon.filterCategories != null && widget.dashboardIcon.filterCategories!.isNotEmpty) ...[
+                  const SizedBox(width: 12),
+                  GestureDetector(
+                    onTap: _showFilterBottomSheet,
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: primaryColor.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.all(10),
+                      child: Image.asset(
+                        'assets/icons/filter.png',
+                        width: 20,
+                        height: 20,
+                        color: primaryColor,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
 
+          // Namghar / Mandir tab toggle
+          if (widget.dashboardIcon.title == 'Namghar & Mandirs')
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (_selectedType != 'namghar') {
+                          setState(() {
+                            _selectedType = 'namghar';
+                            _currentPage = 0;
+                            _entities.clear();
+                          });
+                          _loadEntities();
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: _selectedType == 'namghar'
+                              ? const Color(0xFF00BBA7)
+                              : Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Namghar',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: _selectedType == 'namghar'
+                                ? Colors.white
+                                : Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (_selectedType != 'mandir') {
+                          setState(() {
+                            _selectedType = 'mandir';
+                            _currentPage = 0;
+                            _entities.clear();
+                          });
+                          _loadEntities();
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: _selectedType == 'mandir'
+                              ? const Color(0xFF00BBA7)
+                              : Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Mandir',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: _selectedType == 'mandir'
+                                ? Colors.white
+                                : Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
           // Selected Filter Chips
           if (_selectedFilters.values.any((list) => list.isNotEmpty))
             Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(vertical: 4),
+              height: 48,
+              color: Colors.white,
+              padding: const EdgeInsets.only(bottom: 12),
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: _selectedFilters.entries.expand<Widget>((entry) {
                   final catKey = entry.key;
                   final List<FilterItem> items = entry.value;
                   final catLabel = _getCategoryLabel(catKey);
                   return items.map<Widget>((item) => Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: Chip(
-                      backgroundColor: primaryColor.withOpacity(0.1),
-                      label: Text(
-                        '$catLabel: ${item.name}',
-                        style: const TextStyle(fontSize: 12, color: primaryColor, fontWeight: FontWeight.bold),
-                      ),
-                      deleteIcon: const Icon(Icons.close, size: 14, color: primaryColor),
+                    child: RawChip(
+                      label: Text('$catLabel: ${item.name}'),
+                      labelStyle: const TextStyle(fontSize: 12, color: primaryColor, fontWeight: FontWeight.w600),
                       onDeleted: () {
                         setState(() {
                           _selectedFilters[catKey]?.remove(item);
@@ -291,8 +404,12 @@ class _EntityListScreenState extends State<EntityListScreen> {
                         _entities.clear();
                         _loadEntities();
                       },
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      side: BorderSide(color: primaryColor.withOpacity(0.2)),
+                      backgroundColor: primaryColor.withOpacity(0.06),
+                      deleteIconColor: primaryColor,
+                      deleteIcon: const Icon(Icons.cancel, size: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      side: BorderSide(color: primaryColor.withOpacity(0.1)),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                     ),
                   ));
                 }).toList().cast<Widget>(),
@@ -371,8 +488,12 @@ class _EntityListScreenState extends State<EntityListScreen> {
               ),
           ],
         ),
-        trailing: const Icon(Icons.chevron_right, color: primaryColor),
-        onTap: () {
+        trailing: widget.dashboardIcon.title == 'Namghar & Mandirs'
+            ? null
+            : const Icon(Icons.chevron_right, color: primaryColor),
+        onTap: widget.dashboardIcon.title == 'Namghar & Mandirs'
+            ? null
+            : () {
           // Special handling for multi-level screens like Beneficiaries or SHG
           if (widget.dashboardIcon.title == 'Beneficiaries' && widget.dashboardIcon.endpoint == ApiConstants.schemes) {
             // Level 1: Schemes -> Go to Blocks
@@ -459,7 +580,10 @@ class _EntityListScreenState extends State<EntityListScreen> {
                     iconPath: widget.dashboardIcon.iconPath,
                     endpoint: _getMembersEndpoint(),
                     type: DashboardIconType.memberList,
-                    filterCategories: widget.dashboardIcon.title == 'Morchas' 
+                    filterCategories: (widget.dashboardIcon.title == 'Morchas' || 
+                                       widget.dashboardIcon.title == 'Schools' || 
+                                       widget.dashboardIcon.title == 'Clubs' ||
+                                       widget.dashboardIcon.title == 'Namghar & Mandirs')
                         ? ['designation'] 
                         : widget.dashboardIcon.filterCategories,
                   ),

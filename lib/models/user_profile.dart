@@ -28,12 +28,23 @@ class UserProfile {
       name: json['name'] ?? '',
       email: json['email'],
       phoneNumber: json['phone_number'],
-      photoUrl: json['photo_url'],
+      photoUrl: _buildPhotoUrl(json['photo_url']),
       role: json['role'],
       active: json['active'] ?? 1,
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );
+  }
+
+  static String? _buildPhotoUrl(dynamic photoUrl) {
+    if (photoUrl == null || photoUrl.toString().isEmpty || photoUrl.toString().toLowerCase() == 'null') {
+      return null;
+    }
+    final url = photoUrl.toString();
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return 'https://palasbari.h24x7.in/$url';
   }
 
   Map<String, dynamic> toJson() {

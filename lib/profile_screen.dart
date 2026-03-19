@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'providers/auth_provider.dart';
+import 'widgets/user_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +16,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
+  String? _imagePath;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -21,6 +26,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _nameController = TextEditingController(text: user?.name ?? '');
     _phoneController = TextEditingController(text: user?.phoneNumber ?? '');
     _emailController = TextEditingController(text: user?.email ?? '');
+  }
+
+  Future<void> _pickImage() async {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.camera_alt),
+            title: const Text('Camera'),
+            onTap: () async {
+              Navigator.pop(context);
+              final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+              if (image != null) {
+                setState(() => _imagePath = image.path);
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_library),
+            title: const Text('Gallery'),
+            onTap: () async {
+              Navigator.pop(context);
+              final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+              if (image != null) {
+                setState(() => _imagePath = image.path);
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -50,25 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.only(right: 8.0),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 18,
-                  backgroundColor: Colors.blue.shade700,
-                  child: const Icon(
-                    Icons.notifications_outlined,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                const CircleAvatar(
-                  radius: 18,
-                  backgroundColor: primaryColor,
-                  child: Icon(
-                    Icons.person_outline,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
+                const UserAvatar(),
               ],
             ),
           ),
@@ -97,37 +120,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       child: ClipOval(
-                        child: authProvider.userProfile?.photoUrl != null
-                            ? Image.network(
-                                authProvider.userProfile!.photoUrl!,
+                        child: _imagePath != null
+                            ? Image.file(
+                                File(_imagePath!),
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => 
-                                    Image.asset('assets/Logo.png', fit: BoxFit.cover),
                               )
-                            : Image.asset(
-                                'assets/Logo.png',
-                                fit: BoxFit.cover,
-                              ),
+                            : authProvider.userProfile?.photoUrl != null
+                                ? Image.network(
+                                    authProvider.userProfile!.photoUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        Image.asset('assets/Logo.png', fit: BoxFit.cover),
+                                  )
+                                : Image.asset(
+                                    'assets/Logo.png',
+                                    fit: BoxFit.cover,
+                                  ),
                       ),
                     ),
                     Positioned(
                       bottom: 0,
                       right: 0,
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: primaryColor,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 3,
+                      child: GestureDetector(
+                        onTap: _pickImage,
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: primaryColor,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 3,
+                            ),
                           ),
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 18,
+                          child: const Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
                       ),
                     ),
@@ -399,6 +430,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             name: _nameController.text.trim(),
                             email: _emailController.text.trim(),
                             phoneNumber: _phoneController.text.trim(),
+                            imagePath: _imagePath,
                           );
 
                           if (mounted) {

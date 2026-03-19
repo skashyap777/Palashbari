@@ -188,17 +188,24 @@ class ApiService {
     required String name,
     String? email,
     String? phoneNumber,
-    String? photoUrl,
+    String? imagePath,
   }) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.updateProfile}');
-    final headers = await _getFormHeaders();
+    final headers = await _getHeaders(); // Use standard headers for Auth
     
     final request = http.MultipartRequest('POST', url);
     request.headers.addAll(headers);
     request.fields['name'] = name;
     if (email != null) request.fields['email'] = email;
     if (phoneNumber != null) request.fields['phone_number'] = phoneNumber;
-    if (photoUrl != null) request.fields['photo_url'] = photoUrl;
+
+    if (imagePath != null && imagePath.isNotEmpty) {
+      final file = await http.MultipartFile.fromPath(
+        'photo_url',
+        imagePath,
+      );
+      request.files.add(file);
+    }
 
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
@@ -269,8 +276,12 @@ class ApiService {
       request.fields['search[value]'] = searchValue;
     }
     
-    request.fields['order[0][column]'] = orderColumn ?? '0';
-    request.fields['order[0][dir]'] = orderDir ?? 'desc';
+    if (orderColumn != null) {
+      request.fields['order[0][column]'] = orderColumn;
+    }
+    if (orderDir != null) {
+      request.fields['order[0][dir]'] = orderDir;
+    }
     
     // Add additional parameters
     if (additionalParams != null) {

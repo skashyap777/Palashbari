@@ -10,6 +10,7 @@ class MemberCard extends StatelessWidget {
   final bool showGeographicInfo;
   final bool showShgInfo;
   final bool designationFirst;
+  final bool showInfluentialInfo;
 
   const MemberCard({
     super.key,
@@ -19,12 +20,15 @@ class MemberCard extends StatelessWidget {
     this.showGeographicInfo = true,
     this.showShgInfo = false,
     this.designationFirst = false,
+    this.showInfluentialInfo = false,
   });
 
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('Could not launch $url: $e');
     }
   }
 
@@ -32,222 +36,210 @@ class MemberCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF00BBA7);
 
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Left side - Member info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Name
-                  Text(
-                    member.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600, // Medium
-                      color: Colors.black,
-                      fontFamily: 'Roboto',
-                    ),
-                  ),
-                  const SizedBox(height: 7),
-                  
-                  // Phone and Designation in custom order if needed
-                  ..._buildPhoneAndDesignation(),
-
-                  // Geographic and extra info
-                  if (showGeographicInfo) ...[
-                    // GP
-                    if (member.gaonPanchayat != null && 
-                        member.gaonPanchayat!.isNotEmpty && 
-                        member.gaonPanchayat!.toLowerCase() != 'null') ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        member.gaonPanchayat!,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                    ],
-
-                    // Ward
-                    if (member.ward != null && 
-                        member.ward!.isNotEmpty && 
-                        member.ward!.toLowerCase() != 'null') ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        member.ward!.toLowerCase().contains('ward') 
-                          ? member.ward! 
-                          : 'Ward no. ${member.ward}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                    ],
-
-                    // Booth
-                    if (member.pollingBooth != null && 
-                        member.pollingBooth!.isNotEmpty && 
-                        member.pollingBooth!.toLowerCase() != 'null') ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        member.pollingBooth!,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                    ],
-
-                    // Mandal
-                    if (member.mandal != null && 
-                        member.mandal!.isNotEmpty && 
-                        member.mandal!.toLowerCase() != 'null') ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        member.mandal!,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                    ],
-
-                    // Village
-                    if (member.village != null && 
-                        member.village!.isNotEmpty && 
-                        member.village!.toLowerCase() != 'null') ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        member.village!,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                    ],
-                  ],
-
-                  // SHG Specific Info (GP, Village, Group)
-                  if (showShgInfo) ...[
-                    // GP
-                    if (member.gaonPanchayat != null && member.gaonPanchayat!.isNotEmpty && member.gaonPanchayat!.toLowerCase() != 'null') ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        member.gaonPanchayat!,
-                        style: const TextStyle(fontSize: 12, color: Colors.black, fontFamily: 'Roboto'),
-                      ),
-                    ],
-                    // Village
-                    if (member.village != null && member.village!.isNotEmpty && member.village!.toLowerCase() != 'null') ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        member.village!,
-                        style: const TextStyle(fontSize: 12, color: Colors.black, fontFamily: 'Roboto'),
-                      ),
-                    ],
-                    // SHG Name (Group)
-                    if (member.selfHelpGroup != null && member.selfHelpGroup!.isNotEmpty && member.selfHelpGroup!.toLowerCase() != 'null') ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        member.selfHelpGroup!,
-                        style: const TextStyle(fontSize: 12, color: Colors.black, fontFamily: 'Roboto', fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ],
-
-                  // Address
-                  if (showAddress && 
-                      member.address != null && 
-                      member.address!.isNotEmpty && 
-                      member.address!.toLowerCase() != 'null') ...[
-                    const SizedBox(height: 3),
-                    Text(
-                      member.address!,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
-                  ],
-
-                  // Pristha No.
-                  if (showGeographicInfo &&
-                      member.pristhaNo != null && 
-                      member.pristhaNo!.isNotEmpty && 
-                      member.pristhaNo!.toLowerCase() != 'null') ...[
-                    const SizedBox(height: 3),
-                    Text(
-                      'Pristha No. ${member.pristhaNo}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            
-            // Right side - Action buttons
-            Row(
+          ],
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // WhatsApp button
-                _buildActionButton(
-                  icon: Icons.chat_bubble, // More filled like WhatsApp bubble
-                  onTap: () => _launchUrl(member.whatsappUrl),
-                  color: primaryColor,
+                // Member Info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header Section (Name + Category)
+                      if (member.committeeName != null && member.committeeName!.isNotEmpty) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: primaryColor.withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            member.committeeName!.toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                              color: primaryColor,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                      
+                      Text(
+                        member.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1D1D1F),
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 6),
+
+                      // Basic Info (Phone & Designation)
+                      ..._buildPhoneAndDesignation(),
+                      
+                      const SizedBox(height: 12),
+
+                      // Additional Info Section (Geographic/Address/SHG)
+                      _buildInfoSection(),
+                    ],
+                  ),
                 ),
                 
-                const SizedBox(width: 12),
-                
-                // Call button
-                _buildActionButton(
-                  icon: Icons.phone, // Filled phone icon
-                  onTap: () => _launchUrl(member.callUrl),
-                  color: primaryColor,
+                const SizedBox(width: 8),
+
+                // Action Buttons
+                Column(
+                  children: [
+                    _buildActionButton(
+                      iconPath: 'assets/icons/whatsapp.png',
+                      onTap: () => _launchUrl(member.whatsappUrl),
+                      color: const Color(0xFF25D366),
+                    ),
+                    const SizedBox(height: 10),
+                    _buildActionButton(
+                      iconPath: 'assets/icons/phone.png',
+                      onTap: () => _launchUrl(member.callUrl),
+                      color: primaryColor,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
+  Widget _buildInfoSection() {
+    List<String> infoItems = [];
+
+    if (showInfluentialInfo) {
+      if (member.gaonPanchayat != null && member.gaonPanchayat!.toLowerCase() != 'null') {
+        infoItems.add(member.gaonPanchayat!);
+      }
+      if (member.pollingBooth != null && member.pollingBooth!.toLowerCase() != 'null') {
+        infoItems.add(member.pollingBooth!);
+      }
+    } else if (showGeographicInfo) {
+      if (member.gaonPanchayat != null && member.gaonPanchayat!.toLowerCase() != 'null') {
+        infoItems.add(member.gaonPanchayat!);
+      }
+      if (member.ward != null && member.ward!.toLowerCase() != 'null') {
+        infoItems.add(member.ward!.toLowerCase().contains('ward') ? member.ward! : 'Ward ${member.ward}');
+      }
+      if (member.pollingBooth != null && member.pollingBooth!.toLowerCase() != 'null') {
+        infoItems.add(member.pollingBooth!);
+      }
+      if (member.village != null && member.village!.toLowerCase() != 'null') {
+        infoItems.add(member.village!);
+      }
+    } else if (showShgInfo) {
+       if (member.gaonPanchayat != null && member.gaonPanchayat!.toLowerCase() != 'null') {
+        infoItems.add(member.gaonPanchayat!);
+      }
+       if (member.village != null && member.village!.toLowerCase() != 'null') {
+        infoItems.add(member.village!);
+      }
+       if (member.selfHelpGroup != null && member.selfHelpGroup!.toLowerCase() != 'null') {
+        infoItems.add(member.selfHelpGroup!);
+      }
+    }
+
+    if (showAddress && member.address != null && member.address!.toLowerCase() != 'null' && member.address!.isNotEmpty) {
+      infoItems.add(member.address!);
+    }
+
+    if (infoItems.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9F9F9),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey.shade100, width: 0.5),
+      ),
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: infoItems.map((item) => Padding(
+          padding: const EdgeInsets.only(bottom: 4.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 6.0, right: 8.0),
+                child: Container(
+                  width: 3.5,
+                  height: 3.5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  item,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )).toList(),
+      ),
+    );
+  }
+
   Widget _buildActionButton({
-    required IconData icon,
+    required String iconPath,
     required VoidCallback onTap,
     required Color color,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        width: 44,
-        height: 38,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 20,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.all(10),
+          child: Image.asset(
+            iconPath,
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );
@@ -256,24 +248,26 @@ class MemberCard extends StatelessWidget {
   List<Widget> _buildPhoneAndDesignation() {
     final phoneWidget = Text(
       member.fullPhoneNumber,
-      style: const TextStyle(
-        fontSize: 12,
-        color: Colors.black,
+      style: TextStyle(
+        fontSize: 13,
+        color: Colors.grey.shade500,
         fontFamily: 'Roboto',
+        fontWeight: FontWeight.w500,
       ),
     );
 
     Widget? designationWidget;
     if (member.designation != null && 
         member.designation!.isNotEmpty && 
-        member.designation!.toLowerCase() != 'null') {
+        member.designation!.toLowerCase() != 'null' &&
+        member.designation!.toUpperCase() != 'N/A') {
       designationWidget = Text(
         member.designation!,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
-          color: Colors.black,
-          fontFamily: 'Roboto',
-          fontWeight: FontWeight.w500,
+          color: const Color(0xFF00BBA7),
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w600,
         ),
       );
     }
@@ -281,14 +275,14 @@ class MemberCard extends StatelessWidget {
     if (designationFirst && designationWidget != null) {
       return [
         designationWidget,
-        const SizedBox(height: 3),
+        const SizedBox(height: 2),
         phoneWidget,
       ];
     } else {
       return [
         phoneWidget,
         if (designationWidget != null) ...[
-          const SizedBox(height: 3),
+          const SizedBox(height: 2),
           designationWidget,
         ],
       ];

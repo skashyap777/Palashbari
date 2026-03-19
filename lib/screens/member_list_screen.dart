@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/member.dart';
+import '../widgets/user_avatar.dart';
 import '../models/paginated_response.dart';
 import '../services/api_service.dart';
+import '../services/api_constants.dart';
 import '../widgets/member_card.dart';
 import '../widgets/filter_bottom_sheet.dart';
 import '../config/dashboard_config.dart';
@@ -94,6 +97,11 @@ class _MemberListScreenState extends State<MemberListScreen> {
       if (widget.entityId != null) {
         if (widget.dashboardIcon.title == 'Morchas') {
           params['morcha_id'] = widget.entityId;
+          // In Android, morchaType is passed from MorchasFragment to MorchasDetailsFragment
+          // and used in the API call. We should ensure it's available.
+          if (widget.extraParams?['type'] != null) {
+            params['type'] = widget.extraParams?['type'];
+          }
         } else if (widget.dashboardIcon.title == 'Schools') {
           params['school_id'] = widget.entityId;
         } else if (widget.dashboardIcon.title == 'Clubs') {
@@ -126,7 +134,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
       });
 
       final response = await _apiService.fetchPaginatedData(
-        endpoint: widget.dashboardIcon.endpoint,
+        endpoint: _getEndpoint(),
         start: _currentPage * _pageSize,
         length: _pageSize,
         searchValue: _searchController.text.trim(),
@@ -177,6 +185,9 @@ class _MemberListScreenState extends State<MemberListScreen> {
       if (widget.entityId != null) {
         if (widget.dashboardIcon.title == 'Morchas') {
           params['morcha_id'] = widget.entityId;
+          if (widget.extraParams?['type'] != null) {
+            params['type'] = widget.extraParams?['type'];
+          }
         } else if (widget.dashboardIcon.title == 'Schools') {
           params['school_id'] = widget.entityId;
         } else if (widget.dashboardIcon.title == 'Clubs') {
@@ -209,7 +220,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
       });
 
       final response = await _apiService.fetchPaginatedData(
-        endpoint: widget.dashboardIcon.endpoint,
+        endpoint: _getEndpoint(),
         start: _currentPage * _pageSize,
         length: _pageSize,
         searchValue: _searchController.text.trim(),
@@ -277,72 +288,79 @@ class _MemberListScreenState extends State<MemberListScreen> {
     const primaryColor = Color(0xFF00BBA7);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         elevation: 0,
-        centerTitle: true, // Center the title as in the image
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF00BBA7), size: 28),
+          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1D1D1F), size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.customTitle ?? widget.entityName ?? widget.dashboardIcon.title,
           style: const TextStyle(
-            color: Colors.black87,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            color: Color(0xFF1D1D1F),
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.5,
           ),
         ),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: const Color(0xFF00BBA7),
-              child: const Icon(
-                Icons.person_outline,
-                color: Colors.white,
-                size: 24,
-              ),
-            ),
+            padding: EdgeInsets.only(right: 16.0),
+            child: UserAvatar(radius: 18),
           ),
         ],
       ),
       body: Column(
         children: [
           // Search and Filter bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Row(
               children: [
                 Expanded(
                   child: Container(
-                    height: 50,
+                    height: 44,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(color: Colors.grey.shade300),
+                      color: const Color(0xFFF2F2F7),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: TextField(
                       controller: _searchController,
                       onChanged: _onSearch,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                       decoration: InputDecoration(
-                        hintText: 'Search...',
-                        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 16),
+                        hintText: 'Search',
+                        hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
+                        prefixIcon: Icon(Icons.search, color: Colors.grey.shade500, size: 20),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 12),
-                InkWell(
+                GestureDetector(
                   onTap: _showFilterBottomSheet,
-                  child: const Icon(
-                    Icons.filter_alt_outlined,
-                    color: Color(0xFF00BBA7),
-                    size: 32,
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: primaryColor.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    child: Image.asset(
+                      'assets/icons/filter.png',
+                      width: 20,
+                      height: 20,
+                      color: primaryColor,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ],
@@ -352,8 +370,9 @@ class _MemberListScreenState extends State<MemberListScreen> {
           // Selected Filter Chips
           if (_selectedFilters.values.any((list) => list.isNotEmpty))
             Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(vertical: 4),
+              height: 48,
+              color: Colors.white,
+              padding: const EdgeInsets.only(bottom: 12),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -363,13 +382,9 @@ class _MemberListScreenState extends State<MemberListScreen> {
                   final catLabel = _getCategoryLabel(catKey);
                   return items.map<Widget>((item) => Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: Chip(
-                      backgroundColor: primaryColor.withOpacity(0.1),
-                      label: Text(
-                        '$catLabel: ${item.name}',
-                        style: const TextStyle(fontSize: 12, color: primaryColor, fontWeight: FontWeight.bold),
-                      ),
-                      deleteIcon: const Icon(Icons.close, size: 14, color: primaryColor),
+                    child: RawChip(
+                      label: Text('$catLabel: ${item.name}'),
+                      labelStyle: const TextStyle(fontSize: 12, color: primaryColor, fontWeight: FontWeight.w600),
                       onDeleted: () {
                         setState(() {
                           _selectedFilters[catKey]?.remove(item);
@@ -379,39 +394,59 @@ class _MemberListScreenState extends State<MemberListScreen> {
                         _members.clear();
                         _loadMembers();
                       },
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      side: BorderSide(color: primaryColor.withOpacity(0.2)),
+                      backgroundColor: primaryColor.withOpacity(0.06),
+                      deleteIconColor: primaryColor,
+                      deleteIcon: const Icon(Icons.cancel, size: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      side: BorderSide(color: primaryColor.withOpacity(0.1)),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                     ),
                   ));
                 }).toList().cast<Widget>(),
               ),
             ),
 
-          // Member list container
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEBEBEB),
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(28),
-                  child: Column(
-                    children: [
-                      Expanded(child: _buildBody()),
-                    ],
+          // Total Records Count
+          if (!_isLoading && _members.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Row(
+                children: [
+                  Text(
+                    '$_totalRecords records found',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade600,
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
+
+          // Member list container
+          Expanded(
+            child: _buildBody(),
           ),
         ],
       ),
     );
   }
-
+  
+  String _getEndpoint() {
+    switch (widget.dashboardIcon.title) {
+      case 'Morchas':            return ApiConstants.morchaMembers;
+      case 'Schools':            return ApiConstants.schoolMembers;
+      case 'Clubs':              return ApiConstants.clubMembers;
+      case 'Mandal Committee':   return ApiConstants.mandalCommittee;
+      case 'Namghar & Mandirs':  return ApiConstants.namgharMandirMembers;
+      case 'Organisation':       return ApiConstants.organisationMembers;
+      case 'Beneficiaries':      return ApiConstants.schemeMembers;
+      case 'Self Help Groups':   return ApiConstants.selfHelpGroupMembers;
+      default:                   return widget.dashboardIcon.endpoint;
+    }
+  }
+  
   Widget _buildBody() {
     if (_isLoading && _members.isEmpty) {
       return const Center(
@@ -451,14 +486,9 @@ class _MemberListScreenState extends State<MemberListScreen> {
       color: const Color(0xFF00BBA7),
       child: ListView.separated(
         controller: _scrollController,
-        padding: const EdgeInsets.only(bottom: 20), // Added some padding at the bottom
+        padding: const EdgeInsets.only(bottom: 24, top: 8),
         itemCount: _members.length + (_isLoadingMore ? 1 : 0),
-        separatorBuilder: (context, index) => Divider(
-          color: Colors.grey.shade300,
-          height: 1,
-          indent: 16,
-          endIndent: 16,
-        ),
+        separatorBuilder: (context, index) => const SizedBox(height: 2),
         itemBuilder: (context, index) {
           if (index == _members.length) {
             return const Padding(
@@ -471,13 +501,19 @@ class _MemberListScreenState extends State<MemberListScreen> {
           final isVdpScreen = widget.dashboardIcon.title == 'VDP Members';
           final isBeneficiaryScreen = widget.dashboardIcon.title == 'Beneficiaries';
           final isShgScreen = widget.dashboardIcon.title == 'Self Help Groups';
+          final isBihuScreen = widget.dashboardIcon.title == 'Bihu Committee' ||
+                             widget.dashboardIcon.title == 'Local Business Association' ||
+                             widget.dashboardIcon.title == 'Local Mohila Committee';
+          final isInfluentialScreen = widget.dashboardIcon.title == 'Influential Persons';
+          final isMandalCommittee = widget.dashboardIcon.endpoint == ApiConstants.mandalCommittee;
           
           return MemberCard(
             member: _members[index],
-            showAddress: !isKarmiScreen && !isBeneficiaryScreen && !isShgScreen,
-            showGeographicInfo: !isKarmiScreen && !isVdpScreen && !isBeneficiaryScreen && !isShgScreen,
-            showShgInfo: isShgScreen, // New flag for specific SHG info display
-            designationFirst: isVdpScreen,
+            showAddress: !isKarmiScreen && !isBeneficiaryScreen && !isShgScreen && !isBihuScreen && !isInfluentialScreen && !isMandalCommittee,
+            showGeographicInfo: !isKarmiScreen && !isVdpScreen && !isBeneficiaryScreen && !isShgScreen && !isInfluentialScreen && !isMandalCommittee,
+            showShgInfo: isShgScreen,
+            designationFirst: isVdpScreen || isBihuScreen,
+            showInfluentialInfo: isInfluentialScreen,
           );
         },
       ),

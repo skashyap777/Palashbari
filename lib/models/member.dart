@@ -19,6 +19,7 @@ class Member {
   final String? updatedAt;
   final String? selfHelpGroup;
   final String? addedByName;
+  final String? committeeName; // e.g. bihu_committee_name
 
   Member({
     required this.id,
@@ -40,12 +41,14 @@ class Member {
     this.createdAt,
     this.updatedAt,
     this.addedByName,
+    this.committeeName,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
     return Member(
       id: json['id'] ?? 0,
-      name: json['name'] ?? json['pramukh_name'] ?? json['pradhan_name'] ?? '',
+      name: json['committee_member_name'] ?? json['member_name'] ?? json['name'] ?? json['pramukh_name'] ?? json['pradhan_name'] ?? '',
+      committeeName: json['bihu_committee_name'] ?? json['business_association_name'] ?? json['local_mohila_committee_name'],
       designation: json['designation_name'] ?? json['type'] ?? (json['designation'] is String ? json['designation'] : null),
       designationId: json['designation'] is int ? json['designation'] : null,
       phoneCode: json['phone_code'] ?? '+91',

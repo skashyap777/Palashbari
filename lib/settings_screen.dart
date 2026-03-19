@@ -5,6 +5,7 @@ import 'about_screen.dart';
 import 'change_password_screen.dart';
 import 'providers/auth_provider.dart';
 import 'login_screen.dart';
+import 'widgets/user_avatar.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -21,295 +22,238 @@ class _SettingsScreenState extends State<SettingsScreen> {
     const primaryColor = Color(0xFF00BBA7);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF2F2F7), // iOS Grouped Background
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1D1D1F), size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           'Settings',
           style: TextStyle(
-            color: Colors.black87,
-            fontSize: 18,
+            color: Color(0xFF1D1D1F),
+            fontSize: 17,
             fontWeight: FontWeight.w600,
+            letterSpacing: -0.5,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 18,
-                  backgroundColor: Colors.blue.shade700,
-                  child: const Icon(
-                    Icons.notifications_outlined,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                const CircleAvatar(
-                  radius: 18,
-                  backgroundColor: primaryColor,
-                  child: Icon(
-                    Icons.person_outline,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             
             // Profile Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Row(
-                children: [
-                  // Profile Picture
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: primaryColor,
-                        width: 2,
-                      ),
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/Logo.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  
-                  // Name and Email
-                  Expanded(
-                    child: Consumer<AuthProvider>(
-                      builder: (context, authProvider, child) {
-                        final user = authProvider.userProfile;
-                        return Column(
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Consumer<AuthProvider>(
+                builder: (context, authProvider, child) {
+                  final user = authProvider.userProfile;
+                  return Row(
+                    children: [
+                      const UserAvatar(radius: 32),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               user?.name ?? 'User Name',
                               style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF1D1D1F),
+                                letterSpacing: -0.5,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Text(
                               user?.email ?? user?.phoneNumber ?? 'Email/Phone',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                             ),
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade600,
+                                letterSpacing: -0.2,
+                              ),
                             ),
                           ],
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
 
             const SizedBox(height: 32),
 
             // General Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Text(
-                'General',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
-                ),
+            _buildSectionHeader('General'),
+            _buildGroupedSection([
+              _buildMenuItem(
+                iconPath: 'assets/icons/user_svgrepo_com.png',
+                iconColor: primaryColor,
+                title: 'Edit Profile',
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen())),
               ),
-            ),
-            const SizedBox(height: 12),
-
-            // Edit Profile
-            _buildMenuItem(
-              icon: Icons.person_outline,
-              iconColor: primaryColor,
-              title: 'Edit Profile',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProfileScreen(),
-                  ),
-                );
-              },
-            ),
-
-            // Change Password
-            _buildMenuItem(
-              icon: Icons.lock_outline,
-              iconColor: primaryColor,
-              title: 'Change Password',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ChangePasswordScreen(),
-                  ),
-                );
-              },
-            ),
-
-            // Notifications with Toggle
-            _buildMenuItemWithToggle(
-              icon: Icons.notifications_outlined,
-              iconColor: primaryColor,
-              title: 'Notifications',
-              value: _notificationsEnabled,
-              onChanged: (value) {
-                setState(() {
-                  _notificationsEnabled = value;
-                });
-              },
-            ),
+              _buildMenuItem(
+                iconPath: 'assets/icons/password_minimalistic_input_svgrepo_com.png',
+                iconColor: const Color(0xFF5856D6), // iOS Purple
+                title: 'Change Password',
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ChangePasswordScreen())),
+              ),
+              _buildMenuItemWithToggle(
+                iconPath: 'assets/icons/bell.png',
+                iconColor: const Color(0xFFFF9500), // iOS Orange
+                title: 'Notifications',
+                value: _notificationsEnabled,
+                onChanged: (value) => setState(() => _notificationsEnabled = value),
+              ),
+            ]),
 
             const SizedBox(height: 24),
 
             // Information Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Text(
-                'Information',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
-                ),
+            _buildSectionHeader('Information'),
+            _buildGroupedSection([
+              _buildMenuItem(
+                iconPath: 'assets/icons/info.png',
+                iconColor: const Color(0xFF007AFF), // iOS Blue
+                title: 'About the App',
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutScreen())),
               ),
-            ),
-            const SizedBox(height: 12),
-
-            // About the app
-            _buildMenuItem(
-              icon: Icons.info_outline,
-              iconColor: primaryColor,
-              title: 'About the app',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AboutScreen(),
-                  ),
-                );
-              },
-            ),
-
-            // Privacy Policy
-            _buildMenuItem(
-              icon: Icons.shield_outlined,
-              iconColor: primaryColor,
-              title: 'Privacy Policy',
-              onTap: () {
-                // TODO: Navigate to privacy policy screen
-              },
-            ),
-
-            // Help & Support
-            _buildMenuItem(
-              icon: Icons.help_outline,
-              iconColor: primaryColor,
-              title: 'Help & Support',
-              onTap: () {
-                // TODO: Navigate to help screen
-              },
-            ),
+              _buildMenuItem(
+                iconPath: 'assets/icons/location.png',
+                iconColor: const Color(0xFF32D74B), // iOS Green
+                title: 'Privacy Policy',
+                onTap: () {},
+              ),
+              _buildMenuItem(
+                iconPath: 'assets/icons/support.png',
+                iconColor: const Color(0xFF64D2FF), // iOS Light Blue
+                title: 'Help & Support',
+                onTap: () {},
+              ),
+            ]),
 
             const SizedBox(height: 32),
 
-            // Logout
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: InkWell(
-                onTap: () {
-                  _showLogoutDialog(context);
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.logout,
-                      color: Colors.red.shade400,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 16),
-                    Text(
-                      'Logout',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.red.shade400,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
+            // Logout Group
+            _buildGroupedSection([
+              _buildMenuItem(
+                iconPath: 'assets/icons/logout.png',
+                iconColor: const Color(0xFFFF3B30), // iOS Red
+                title: 'Logout',
+                textColor: const Color(0xFFFF3B30),
+                showChevron: false,
+                onTap: () => _showLogoutDialog(context),
               ),
-            ),
+            ]),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 48),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(28, 0, 24, 8),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          title.toUpperCase(),
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey.shade600,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGroupedSection(List<Widget> children) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: children.asMap().entries.map((entry) {
+          final index = entry.key;
+          final widget = entry.value;
+          return Column(
+            children: [
+              widget,
+              if (index < children.length - 1)
+                Padding(
+                  padding: const EdgeInsets.only(left: 56.0),
+                  child: Divider(height: 1, color: Colors.grey.shade200),
+                ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   Widget _buildMenuItem({
-    required IconData icon,
+    required String iconPath,
     required Color iconColor,
     required String title,
     required VoidCallback onTap,
+    Color textColor = const Color(0xFF1D1D1F),
+    bool showChevron = true,
   }) {
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: iconColor,
-              size: 24,
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Image.asset(
+                iconPath,
+                width: 20,
+                height: 20,
+              ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 14),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black87,
+                  color: textColor,
                   fontWeight: FontWeight.w500,
+                  letterSpacing: -0.2,
                 ),
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: Colors.grey.shade400,
-              size: 24,
-            ),
+            if (showChevron)
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.grey.shade300,
+                size: 14,
+              ),
           ],
         ),
       ),
@@ -317,43 +261,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildMenuItemWithToggle({
-    required IconData icon,
+    required String iconPath,
     required Color iconColor,
     required String title,
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    const primaryColor = Color(0xFF00BBA7);
-    
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Row(
         children: [
-          Icon(
-            icon,
-            color: iconColor,
-            size: 24,
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Image.asset(
+              iconPath,
+              width: 20,
+              height: 20,
+            ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 14),
           Expanded(
             child: Text(
               title,
               style: const TextStyle(
                 fontSize: 16,
-                color: Colors.black87,
+                color: Color(0xFF1D1D1F),
                 fontWeight: FontWeight.w500,
+                letterSpacing: -0.2,
               ),
             ),
           ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeColor: primaryColor,
+          Transform.scale(
+            scale: 0.8,
+            child: Switch.adaptive(
+              value: value,
+              onChanged: onChanged,
+              activeColor: const Color(0xFF32D74B), // iOS Green
+            ),
           ),
         ],
       ),
     );
   }
+
+
 
   void _showLogoutDialog(BuildContext context) {
     showDialog(

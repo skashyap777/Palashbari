@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../widgets/user_avatar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/election_result.dart';
 import '../services/api_service.dart';
@@ -142,6 +144,10 @@ class _ElectionResultDetailsScreenState extends State<ElectionResultDetailsScree
           IconButton(
             icon: const Icon(Icons.filter_list, color: primaryColor),
             onPressed: _showBoothFilter,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(right: 12.0),
+            child: UserAvatar(radius: 20),
           ),
         ],
       ),

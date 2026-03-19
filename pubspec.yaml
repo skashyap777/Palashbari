@@ -47,6 +47,8 @@ dependencies:
   
   # URL launcher for WhatsApp and phone calls
   url_launcher: ^6.2.4
+  image_picker: ^1.2.1
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +61,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
   flutter_native_splash: ^2.4.4
+  flutter_launcher_icons: ^0.14.4
 
 
 # For information on the generic Dart part of this file, see the
@@ -75,7 +78,42 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/Logo.png
-    - assets/icons/
+    - assets/icons/anganwadi_karmi.png
+    - assets/icons/ap_members.png
+    - assets/icons/asha_karmi.png
+    - assets/icons/bell.png
+    - assets/icons/beneficiaries.png
+    - assets/icons/bihu_committee.png
+    - assets/icons/clubs.png
+    - assets/icons/district_committee.png
+    - assets/icons/election_results.png
+    - assets/icons/error.png
+    - assets/icons/filter.png
+    - assets/icons/gp_members.png
+    - assets/icons/hsb_team.png
+    - assets/icons/influential_persons.png
+    - assets/icons/info.png
+    - assets/icons/local_business_association.png
+    - assets/icons/local_mohila_committee.png
+    - assets/icons/location.png
+    - assets/icons/logout.png
+    - assets/icons/mandal_committee.png
+    - assets/icons/morchas.png
+    - assets/icons/namghars_mandirs.png
+    - assets/icons/password_minimalistic_input_svgrepo_com.png
+    - assets/icons/phone.png
+    - assets/icons/pristha_ahbayak.png
+    - assets/icons/schools.png
+    - assets/icons/search.png
+    - assets/icons/self_help_groups.png
+    - assets/icons/senior_citizen.png
+    - assets/icons/shakti_kendra.png
+    - assets/icons/support.png
+    - assets/icons/user_svgrepo_com.png
+    - assets/icons/vdp_members.png
+    - assets/icons/village_pradhan.png
+    - assets/icons/whatsapp.png
+    - assets/icons/zpc_members.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -119,4 +157,11 @@ flutter_native_splash:
     icon_background_color: "#00bba7"
   
   fullscreen: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/Icon/android/ic_launcher-web.png"
+  adaptive_icon_background: "#00bba7"
+  adaptive_icon_foreground: "assets/Icon/android/mipmap-xxxhdpi/ic_launcher_foreground.png"
 

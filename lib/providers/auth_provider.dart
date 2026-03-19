@@ -128,7 +128,7 @@ class AuthProvider with ChangeNotifier {
     required String name,
     String? email,
     String? phoneNumber,
-    String? photoUrl,
+    String? imagePath,
   }) async {
     _isLoading = true;
     _error = null;
@@ -139,7 +139,7 @@ class AuthProvider with ChangeNotifier {
         name: name,
         email: email,
         phoneNumber: phoneNumber,
-        photoUrl: photoUrl,
+        imagePath: imagePath,
       );
 
       // Refresh profile

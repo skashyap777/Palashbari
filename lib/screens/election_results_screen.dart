@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../widgets/user_avatar.dart';
 import '../models/election_result.dart';
 import '../services/api_service.dart';
 import '../services/api_constants.dart';
@@ -48,6 +50,12 @@ class _ElectionResultsScreenState extends State<ElectionResultsScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: const UserAvatar(radius: 20),
+          ),
+        ],
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
